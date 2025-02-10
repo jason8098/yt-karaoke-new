@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Search App</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.1/socket.io.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="index.js"></script>
+</head>
+<body>
+    <video autoplay muted loop id="myVideo">
+        <source src="/intro.mp4" type="video/mp4">
+      </video>
+    <div class="container">
+        <h1 id="txt-title">JK 노래방</h1>
+
+        <!-- Settings Icon -->
+        <img style="width:30px" src="settings-icon.png" class="settings-icon" onclick="toggleSettingsModal()" alt="Settings" />
+        <!-- Settings Modal -->
+        <div id="settingsModal" class="modal">
+            <div class="blur"></div>
+            <div class="modal-content" style="margin-top: -55vh;">
+                <span class="close" onclick="closeSettingsModal()">&times;</span>
+                <h2 id="txt-setting">설정</h2>
+                <div>
+                    <h3 id="txt-lang">언어</h3>
+                    <label>
+                        <input type="radio" name="language" value="ko"> 한국어
+                    </label>
+                    <label>
+                        <input type="radio" name="language" value="en"> English
+                    </label>
+                    <label>
+                        <input type="radio" name="language" value="de"> Deutsch
+                    </label>
+                    <br>
+                    <label>
+                        <input type="radio" name="language" value="es"> Español
+                    </label>
+                    <label>
+                        <input type="radio" name="language" value="fr"> Français
+                    </label>
+                    <label>
+                        <input type="radio" name="language" value="it"> Italiano
+                    </label>
+                    <label>
+                        <input type="radio" name="language" value="ch"> 中文
+                    </label>
+                </div>
+                <div>
+                    <h3 id="txt-region">지역</h3>
+                    <select id="region" style="font-size: 1.3em;">
+                        <option id="txt-auto" value="auto">자동</option>
+                        <option id="txt-ko" value="korea">한국</option>
+                        <option id="txt-int" value="international">해외</option>
+                    </select>
+                    <br>
+                    <h3 id="txt-video-tgl">배경 영상</h3>
+                    <label class="switch">
+                        <input id="vid-tgl" type="checkbox" checked>
+                        <span class="slider round"></span>
+                      </label>
+                </div>
+                <br>
+                <button id="txt-save" onclick="saveSettings()">저장</button>
+            </div>
+        </div>
+
+        <!-- Toggle Playlist Button -->
+        <button style="margin-bottom: 10px;" class="collapse-btn txt-rlist" onclick="togglePlaylistModal()">예약 목록</button>
+
+        <!-- Modal for Playlist -->
+        <div id="playlistModal" class="modal">
+            <div class="blur"></div>
+            <div class="modal-content" style="margin-top: -100vh;">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <div class="center-tbl">
+                    <h2 class="txt-rlist">예약 목록</h2>
+                    <div style="width: 100%; overflow-y: auto; max-height: calc(100vh - 280px);">
+                        <table id="list-tbl" style="display: none;">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th style="width:100%" id="txt-cancle-list-title">제목</th>
+                                    <!--th id="txt-cancle-list-action">동작</th-->
+                                </tr>
+                            </thead>
+                            <tbody id="playlist-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search form with search bar and button on the same line -->
+        <form style="width: 100%;" id="searchForm" onsubmit="handleSubmit(event)">
+            <input type="text" id="query" placeholder="검색" required />
+            <button id="txt-sch" type="submit">검색</button>
+        </form>
+
+        <div id="results"></div>
+    </div>
+</body>
+</html>

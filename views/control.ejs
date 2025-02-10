@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Search App with Reserve List</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.1/socket.io.js"></script>
+    <link rel="stylesheet" href="control.css">
+    <script src="control.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>YouTube Karaoke Search</h1>
+        <form id="searchForm" onsubmit="handleSubmit(event)">
+            <input type="text" id="query" placeholder="Search for a song" required />
+            <button class="search-btn" type="submit">Search</button>
+        </form>
+        <div id="results"></div>
+        
+        <h2>Reserve List</h2>
+        <table id="playlist">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="playlist-body"></tbody>
+        </table>
+    </div>
+</body>
+</html>

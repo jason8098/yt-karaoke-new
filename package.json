@@ -1,0 +1,26 @@
+{
+  "name": "npm",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "child_process": "^1.0.2",
+    "ejs": "^3.1.10",
+    "express": "^4.21.0",
+    "puppeteer": "^23.4.0",
+    "socket.io": "^4.8.0",
+    "util": "^0.12.5",
+    "youtube-search-scraper": "^1.0.1",
+    "yt-channel-info": "^3.2.1",
+    "yt-search": "^2.12.1"
+  },
+  "description": "",
+  "devDependencies": {
+    "video.js": "^8.18.1"
+  }
+}

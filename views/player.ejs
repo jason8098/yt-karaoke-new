@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Player</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.1/socket.io.js"></script>
+    <link rel="stylesheet" href="player.css">
+    <script src="player.js"></script>
+</head>
+<body>
+    <div class="playlist-marquee">
+        <span id="playlist-marquee"></span>
+    </div>
+    <video id="video-player" autoplay>
+        <audio id="audio-player"></audio>
+    </video>
+    <img class="qr" src="qr.png" alt="">
+</body>
+</html>
