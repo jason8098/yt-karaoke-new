@@ -1,7 +1,7 @@
 let socket = io();
         const language = localStorage.getItem('language') || 'de';
         const vid_tgl = localStorage.getItem('vid_tgl') || 'false';
-        const region = localStorage.getItem('region') || 'international';
+        const region = localStorage.getItem('region') || 'auto';
         window.onload = function() {
             if(vid_tgl === 'false'){
                 document.getElementById("myVideo").style.display="none";
@@ -186,96 +186,106 @@ let socket = io();
 
         // Asynchronous search function using Fetch
         async function searchYouTube(query) {
-    const region = localStorage.getItem('region') || 'korea'; // Use stored region preference
-    const language = localStorage.getItem('language') || 'en'; // Use stored language preference
+            const region = localStorage.getItem('region') || 'korea'; // Use stored region preference
+            const language = localStorage.getItem('language') || 'en'; // Use stored language preference
 
-    // Emit the search event to the server
-    socket.emit('search', query, region);
-
-    const resultsContainer = document.getElementById('results');
-    resultsContainer.innerHTML = ''; // Clear previous results
-
-    // Listen for search results from the server
-    socket.on('searchResults', (videos) => {
-        resultsContainer.innerHTML = ''; // Clear previous results
-
-        if (videos && videos.length > 0) {
-            const table = document.createElement('table');
-            const thead = document.createElement('thead');
-
-            // Set table headers based on language
-            if (language === "en") {
-                thead.innerHTML = `<tr><th style="width:100%">Title</th><th>Action</th></tr>`;
-            } else if (language === "de") {
-                thead.innerHTML = `<tr><th style="width:100%">Titel</th><th>Aktion</th></tr>`;
-            } else if (language === "it") {
-                thead.innerHTML = `<tr><th style="width:100%">Titolo</th><th>Azione</th></tr>`;
-            } else if (language === "fr") {
-                thead.innerHTML = `<tr><th style="width:100%">Titre</th><th>Action</th></tr>`;
-            } else if (language === "ch") {
-                thead.innerHTML = `<tr><th style="width:100%">標題</th><th>操作</th></tr>`;
-            } 
-            else if (language === "es") {
-                thead.innerHTML = `<tr><th style="width:100%">Título</th><th>Acción</th></tr>`;
+            // Check if the query is a URL
+            if (isURL(query)) {
+                sendToPlayer(query, prompt("Enter song name"));
+                return;
             }
-            else {
-                thead.innerHTML = `<tr><th style="width:100%">제목</th><th>동작</th></tr>`;
-            }
-            table.appendChild(thead);
 
-            const tbody = document.createElement('tbody');
-            videos.forEach(video => {
-                const row = document.createElement('tr');
-                const titleCell = document.createElement('td');
-                titleCell.innerText = video.title;
+            // Emit the search event to the server
+            socket.emit('search', query, region);
 
-                const actionCell = document.createElement('td');
-                const link = document.createElement('button');
-                link.href = 'javascript:void(0)';
+            const resultsContainer = document.getElementById('results');
+            resultsContainer.innerHTML = ''; // Clear previous results
 
-                // Set button text based on language
-                if (language === "en") {
-                    link.innerText = 'Reserve';
-                    link.style.width = "80px";
-                } else if (language === "de") {
-                    link.innerText = 'Reserv.';
-                    link.style.width = "100px";
-                } else if (language === "it") {
-                    link.innerText = 'Prenota';
-                    link.style.width = "80px";
-                } else if (language === "fr") {
-                    link.innerText = 'Réserver';
-                    link.style.width = "90px";
-                } else if (language === "ch") {
-                    link.innerText = '預訂';
-                    link.style.width = "60px";
+            // Listen for search results from the server
+            socket.on('searchResults', (videos) => {
+                resultsContainer.innerHTML = ''; // Clear previous results
+
+                if (videos && videos.length > 0) {
+                    const table = document.createElement('table');
+                    const thead = document.createElement('thead');
+
+                    // Set table headers based on language
+                    if (language === "en") {
+                        thead.innerHTML = `<tr><th style="width:100%">Title</th><th>Action</th></tr>`;
+                    } else if (language === "de") {
+                        thead.innerHTML = `<tr><th style="width:100%">Titel</th><th>Aktion</th></tr>`;
+                    } else if (language === "it") {
+                        thead.innerHTML = `<tr><th style="width:100%">Titolo</th><th>Azione</th></tr>`;
+                    } else if (language === "fr") {
+                        thead.innerHTML = `<tr><th style="width:100%">Titre</th><th>Action</th></tr>`;
+                    } else if (language === "ch") {
+                        thead.innerHTML = `<tr><th style="width:100%">標題</th><th>操作</th></tr>`;
+                    } else if (language === "es") {
+                        thead.innerHTML = `<tr><th style="width:100%">Título</th><th>Acción</th></tr>`;
+                    } else {
+                        thead.innerHTML = `<tr><th style="width:100%">제목</th><th>동작</th></tr>`;
+                    }
+                    table.appendChild(thead);
+
+                    const tbody = document.createElement('tbody');
+                    videos.forEach(video => {
+                        const row = document.createElement('tr');
+                        const titleCell = document.createElement('td');
+                        titleCell.innerText = video.title;
+
+                        const actionCell = document.createElement('td');
+                        const link = document.createElement('button');
+                        link.href = 'javascript:void(0)';
+
+                        // Set button text based on language
+                        if (language === "en") {
+                            link.innerText = 'Reserve';
+                            link.style.width = "80px";
+                        } else if (language === "de") {
+                            link.innerText = 'Reserv.';
+                            link.style.width = "100px";
+                        } else if (language === "it") {
+                            link.innerText = 'Prenota';
+                            link.style.width = "80px";
+                        } else if (language === "fr") {
+                            link.innerText = 'Réserver';
+                            link.style.width = "90px";
+                        } else if (language === "ch") {
+                            link.innerText = '預訂';
+                            link.style.width = "60px";
+                        } else if (language === "es") {
+                            link.innerText = 'Reservar';
+                            link.style.width = "90px";
+                        } else {
+                            link.innerText = '예약';
+                            link.style.width = "60px";
+                        }
+
+                        link.style.fontWeight = "bold";
+                        link.onclick = () => sendToPlayer(video.videoUrl, video.title);
+                        actionCell.appendChild(link);
+
+                        row.appendChild(titleCell);
+                        row.appendChild(actionCell);
+                        tbody.appendChild(row);
+                    });
+
+                    table.appendChild(tbody);
+                    resultsContainer.appendChild(table);
+                } else {
+                    resultsContainer.innerText = 'No results found';
                 }
-                else if (language === "es") {
-                    link.innerText = 'Reservar';
-                    link.style.width = "90px";
-                }
-                
-                else {
-                    link.innerText = '예약';
-                    link.style.width = "60px";
-                }
-
-                link.style.fontWeight = "bold";
-                link.onclick = () => sendToPlayer(video.videoUrl, video.title);
-                actionCell.appendChild(link);
-
-                row.appendChild(titleCell);
-                row.appendChild(actionCell);
-                tbody.appendChild(row);
             });
-
-            table.appendChild(tbody);
-            resultsContainer.appendChild(table);
-        } else {
-            resultsContainer.innerText = 'No results found';
         }
-    });
-}
+
+        function isURL(query) {
+            try {
+                new URL(query);
+                return true;
+            } catch (error) {
+                return false;
+            }
+        }
 
         // Handle form submission asynchronously to prevent refresh
         function handleSubmit(event) {

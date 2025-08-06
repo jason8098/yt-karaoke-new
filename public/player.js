@@ -46,7 +46,7 @@ let socket = io();  // Connect to the WebSocket server
             let playlistContent = '';
 
             if (playlist.length === 0) {
-                playlistContent = '@@ Bitte reservieren Sie. (QR-CODE Scannen / https://karaoke.jkloud.tk) @@';  // Empty playlist message
+                playlistContent = '@@ Bitte reservieren Sie. (QR-CODE Scannen / https://karaoke.jkloud.uk) @@';  // Empty playlist message
                 playIntroVideo();
                 isPlaying = false;
             } else {
@@ -56,7 +56,7 @@ let socket = io();  // Connect to the WebSocket server
                 });
             }
             
-            const invisibleContent = '&nbsp;'.repeat(50);  // Add non-breaking spaces
+            const invisibleContent = '&nbsp;'.repeat(120);  // Add non-breaking spaces
             marqueeSpan.innerHTML = invisibleContent + playlistContent + invisibleContent;  // Add invisible content for smooth scrolling
             adjustMarqueeSpeed();
         }

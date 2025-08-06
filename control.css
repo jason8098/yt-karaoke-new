@@ -1,0 +1,56 @@
+
+body, html {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    background: #f4f4f4;
+}
+
+.container {
+    text-align: center;
+    margin: 20px;
+    width: 90%;
+    max-width: 800px;
+}
+
+input[type="text"] {
+    width: 70%;
+    padding: 10px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.search-btn { background-color: #5cb85c; color: white; }
+.search-btn:hover { background-color: #4cae4c; }
+.remove-btn { background-color: #ff4d4d; color: white; }
+.remove-btn:hover { background-color: #cc0000; }
+
+#results, #playlist {
+    margin-top: 20px;
+    width: 100%;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: left;
+}

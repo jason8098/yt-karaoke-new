@@ -31,7 +31,7 @@
     const getVideoStreamUrl = (videoUrl) => {
         return new Promise((resolve, reject) => {
             // Use yt-dlp to get video and audio streams separately
-            const command = `yt-dlp -f "bestvideo[height<730]+bestaudio" -g "${videoUrl}"`;
+            const command = `yt-dlp --cookies-from-browser firefox -f "bestvideo[height<730]+bestaudio" -g "${videoUrl}"`;
             exec(command, (error, stdout, stderr) => {
                 if (error) {
                     console.error(`Error running yt-dlp: ${error}`);
@@ -56,63 +56,60 @@
             try {
                 let videoaurl;
                 let results;
-
-                if (region === 'korea') {
-                    videoaurl = 'https://youtube.com/@KARAOKEKY';
-                    results = await ytSearch(query + '"KY Karaoke"');
-                } else if (region === 'international') {
-                    videoaurl = 'https://youtube.com/@karafun';
-                    results = await ytSearch(query + '"Karaoke"');
-                } else if (region === 'auto') {
-                    videoaurl = 'https://youtube.com/@karafun';
-                    results = await ytSearch(query + '"Karaoke"');
-                }
-
-                let videos = results.videos
-                    .filter(video => video.author.url === videoaurl)
-                    .slice(0, 10)
-                    .map(video => ({
-                        title: video.title
-                            .replace("[KY ENTERTAINMENT]", "")
-                            .replace(" / KY Karaoke", "")
-                            .replace("[KY 금영노래방]", "")
-                            .replace("(Karaoke Version)", "")
-                            .replace(" / KY KARAOKE", "")
-                            .replace(" | Karaoke Version | KaraFun", "")
-                            .replace("Karaoke ", ""),
-                        videoUrl: video.url
-                    }));
-
-                // Fallback to Karafun channel if no results are found
-                if (videos.length === 0 && region === 'auto') {
-                    videoaurl = 'https://www.youtube.com/@singkingkaraoke';
-                    results = await ytSearch(query + '"Karaoke"');
-                    videos = results.videos
-                        .filter(video => video.author.url === videoaurl)
-                        .slice(0, 10)
-                        .map(video => ({
-                            title: video.title
-                                .replace(" | Karaoke Version | KaraFun", ""),
-                            videoUrl: video.url
-                        }));
-                }
-                // Fallback to Korean karaoke if no results are found
-                if (videos.length === 0 && region === 'auto') {
-                    videoaurl = 'https://youtube.com/@KARAOKEKY';
-                    results = await ytSearch(query + '"KY Karaoke"');
-                    videos = results.videos
-                        .filter(video => video.author.url === videoaurl)
+                let videos = [];
+    
+                const performSearch = async (querySuffix, url) => {
+                    const searchResults = await ytSearch(query + querySuffix);
+                    return searchResults.videos
+                        .filter(video => video.author.url === url)
                         .slice(0, 10)
                         .map(video => ({
                             title: video.title
                                 .replace("[KY ENTERTAINMENT]", "")
                                 .replace(" / KY Karaoke", "")
                                 .replace("[KY 금영노래방]", "")
-                                .replace(" / KY KARAOKE", ""),
+                                .replace("(Karaoke Version)", "")
+                                .replace(" / KY KARAOKE", "")
+                                .replace(" | Karaoke Version | KaraFun", "")
+                                .replace("Karaoke ", ""),
                             videoUrl: video.url
                         }));
+                };
+    
+                if (region === 'korea') {
+                    videoaurl = 'https://youtube.com/@KARAOKEKY';
+                    videos = await performSearch('"KY Karaoke"', videoaurl);
+                } else if (region === 'international') {
+                    videoaurl = 'https://youtube.com/@karafun';
+                    videos = await performSearch('"Karaoke"', videoaurl);
+                } else if (region === 'auto') {
+                    // First attempt: Karafun
+                    videoaurl = 'https://youtube.com/@karafun';
+                    videos = await performSearch('"Karaoke"', videoaurl);
+    
+                    // Fallback 1: Sing King Karaoke
+                    if (videos.length === 0) {
+                        console.log("No results from Karafun, trying Sing King Karaoke...");
+                        videoaurl = 'https://www.youtube.com/@singkingkaraoke';
+                        videos = await performSearch('"Karaoke"', videoaurl);
+                    }
+    
+                    // Fallback 2: KY Karaoke
+                    if (videos.length === 0) {
+                        console.log("No results from Sing King Karaoke, trying KY Karaoke...");
+                        videoaurl = 'https://youtube.com/@KARAOKEKY';
+                        videos = await performSearch('"KY Karaoke"', videoaurl);
+                    }
+    
+                    // Fallback 3: Karaoke Media Plus
+                    if (videos.length === 0) {
+                        console.log("No results from KY Karaoke, trying Karaoke Media Plus...");
+                        videoaurl = 'https://youtube.com/@KaraokeMediaPlus';
+                        videos = await performSearch('Karaoke', videoaurl);
+                        console.log('Search results:', videos);
+                    }
                 }
-
+    
                 console.log('Search results:', videos);
                 socket.emit('searchResults', videos); // Send search results back to the client
             } catch (error) {
@@ -120,6 +117,7 @@
                 socket.emit('searchResults', []); // Send empty array in case of error
             }
         });
+    
 
         socket.emit('playlistUpdated', playlist);
 
