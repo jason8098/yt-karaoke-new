@@ -186,14 +186,8 @@ let socket = io();
 
         // Asynchronous search function using Fetch
         async function searchYouTube(query) {
-            const region = localStorage.getItem('region') || 'korea'; // Use stored region preference
-            const language = localStorage.getItem('language') || 'en'; // Use stored language preference
-
-            // Check if the query is a URL
-            if (query.includes("https")) {
-                sendToPlayer(query, prompt("Enter song name"));
-                return;
-            }
+    const region = localStorage.getItem('region') || 'korea'; // Use stored region preference
+    const language = localStorage.getItem('language') || 'en'; // Use stored language preference
 
             // Emit the search event to the server
             socket.emit('search', query, region);

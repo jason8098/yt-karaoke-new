@@ -30,7 +30,8 @@
     // Function to get direct video and audio URLs using yt-dlp
     const getVideoStreamUrl = (videoUrl) => {
         return new Promise((resolve, reject) => {
-            const command = `yt-dlp --cookies-from-browser firefox -f "bestvideo[height<700]+bestaudio" -g "${videoUrl}"`;
+            // Use yt-dlp to get video and audio streams separately
+            const command = `yt-dlp -f "bestvideo[height<730]+bestaudio" -g "${videoUrl}"`;
             exec(command, (error, stdout, stderr) => {
                 if (error) {
                     console.error(`Error running yt-dlp: ${error}`);
@@ -54,22 +55,23 @@
         socket.on('search', async (query, region) => {
             try {
                 let videoaurl;
-                let results = []; // Initialize results as an array
-                let videos = [];
+                let results;
 
-                const performSearch = async (querySuffix, url) => {
-                    const r = await ytSearch(query + querySuffix);
-                    console.log(r.all);
-                    for (let i = 0; i < r.all.length; i++) {
-                        if (r.all[i].author.url === url) {
-                            results.push(r.all[i]); // Push matching results into the array
-                        }
-                    }
-                    if (results.length === 0) {
-                        console.log(`No results found for query: ${query} with suffix: ${querySuffix} in channel: ${url}`);
-                    }
-                 //   console.log(results);
-                    return results.map(video => ({ // Return the mapped results
+                if (region === 'korea') {
+                    videoaurl = 'https://youtube.com/@KARAOKEKY';
+                    results = await ytSearch(query + '"KY Karaoke"');
+                } else if (region === 'international') {
+                    videoaurl = 'https://youtube.com/@karafun';
+                    results = await ytSearch(query + '"Karaoke"');
+                } else if (region === 'auto') {
+                    videoaurl = 'https://youtube.com/@karafun';
+                    results = await ytSearch(query + '"Karaoke"');
+                }
+
+                let videos = results.videos
+                    .filter(video => video.author.url === videoaurl)
+                    .slice(0, 10)
+                    .map(video => ({
                         title: video.title
                             .replace("[KY ENTERTAINMENT]", "")
                             .replace(" / KY Karaoke", "")
@@ -78,41 +80,41 @@
                             .replace(" / KY KARAOKE", "")
                             .replace(" | Karaoke Version | KaraFun", "")
                             .replace("Karaoke ", ""),
-                        videoUrl: video.url 
+                        videoUrl: video.url
                     }));
-                };
-    
-                if (region === 'korea') {
-                    videoaurl = 'https://youtube.com/@KARAOKEKY';
-                    videos = await performSearch('"KY Karaoke"', videoaurl);
-                } else if (region === 'international') {
-                    videoaurl = 'https://youtube.com/@karafun';
-                    videos = await performSearch('karafun', videoaurl);
-                } else if (region === 'auto') {
-                    //todo: sort the list after search according to the query => before displaying
-                    var ch1 = 'https://youtube.com/@karafun';
-                    var ch2 = 'https://youtube.com/@singkingkaraoke';
-                    var ch3 = 'https://youtube.com/@KARAOKEKY';
-                    var ch4 = 'https://youtube.com/@karafunespana';
-                    var ch5 = 'https://youtube.com/@gerarkaraokes7255';
 
-                    var videos1 = await performSearch('karafun"', ch1);
-                    var videos2 = await performSearch('sing king', ch2);
-                    var videos3 = await performSearch('"KY Karaoke"', ch3);
-                    var videos4 = await performSearch('Karaoke', ch4);
-                    var videos5 = await performSearch('Karaoke', ch5);
-                    
-                    console.log('Waiting for 2 seconds before searching for Spanish and other channels...');
-                    await new Promise(resolve => setTimeout(resolve, 2000)); // Wait for 2 seconds
-
-                    var videos4 = await performSearch('karaoke', ch4);
-
-                    videos = videos1.concat(videos2, videos3, videos4, videos5); // Combine all results
-
+                // Fallback to Karafun channel if no results are found
+                if (videos.length === 0 && region === 'auto') {
+                    videoaurl = 'https://www.youtube.com/@singkingkaraoke';
+                    results = await ytSearch(query + '"Karaoke"');
+                    videos = results.videos
+                        .filter(video => video.author.url === videoaurl)
+                        .slice(0, 10)
+                        .map(video => ({
+                            title: video.title
+                                .replace(" | Karaoke Version | KaraFun", ""),
+                            videoUrl: video.url
+                        }));
                 }
-                
-            //    console.log('Search results:', videos);
-               socket.emit('searchResults', videos); // Send search results back to the client
+                // Fallback to Korean karaoke if no results are found
+                if (videos.length === 0 && region === 'auto') {
+                    videoaurl = 'https://youtube.com/@KARAOKEKY';
+                    results = await ytSearch(query + '"KY Karaoke"');
+                    videos = results.videos
+                        .filter(video => video.author.url === videoaurl)
+                        .slice(0, 10)
+                        .map(video => ({
+                            title: video.title
+                                .replace("[KY ENTERTAINMENT]", "")
+                                .replace(" / KY Karaoke", "")
+                                .replace("[KY 금영노래방]", "")
+                                .replace(" / KY KARAOKE", ""),
+                            videoUrl: video.url
+                        }));
+                }
+
+                console.log('Search results:', videos);
+                socket.emit('searchResults', videos); // Send search results back to the client
             } catch (error) {
                 console.error('Error fetching YouTube results:', error);
                 socket.emit('searchResults', []); // Send empty array in case of error
