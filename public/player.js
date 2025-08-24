@@ -56,7 +56,7 @@ let socket = io();  // Connect to the WebSocket server
                 });
             }
             
-            const invisibleContent = '&nbsp;'.repeat(50);  // Add non-breaking spaces
+            const invisibleContent = '&nbsp;'.repeat(120);  // Add non-breaking spaces
             marqueeSpan.innerHTML = invisibleContent + playlistContent + invisibleContent;  // Add invisible content for smooth scrolling
             adjustMarqueeSpeed();
         }
