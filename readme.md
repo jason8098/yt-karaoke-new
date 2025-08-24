@@ -13,8 +13,12 @@
 
 ## 아직 부족한 점 / 해결할 점
 - 일단 크롬은 자동재생이 안되기에 여전히 파이어폭스를 사용해야 합니다. video-js 라는 라이브러리를 쓰면 된다고 하나, 복잡해서 나중에 다시 시도해볼 예정입니다.
-- yt-search 라이브러리가 국가에 따라서 검색결과가 제한된거나 바뀝니다. 국가에 상관없이 동일한 결과를 얻을수 있는 라이브러리가 있으면 한번 시도해 보겠습니다.
+- yt-search 라이브러리가 국가에 따라서 검색결과가 제한된거나 바뀝니다. 국가에 상관없이 동일한 결과를 얻을수 있는 라이브러리가 있으면 한번 시도해 보겠습니다. 또한 모든 채널에서 검색할때, 아무 채널에서 결과가 나오면 검색을 멈춰버립니다. 이것을 멈추지 않게 해야 더 많고 정확한 결과를 표시 할 수 있을겄입니다. 
 - yt-dlp 의 고질병? 같은게 최근에 생겼습니다. 유튜브 로그인이 되어있지 않으면 스트림 url을 얻을수 없습니다. 그러므로 브라우저에서 쿠키를 추출해서 명령줄에 --cookies 또는 --cookies-from-browser 를 사용해 넣어줘야 합니다. 하지만이게 또 기기마다 다르고, 윈도우에서는 제대로 작동이 안되고, 일부 브라우저만 제대로 된다는 점에서 좀 불안정하지 않나 싶습니다. 이것도 대체가능한 라이브러리가 필요합니다. 
+
+## 스크린샷
+업로드 예정
+
 
 ## 설치
 ### 준비물
@@ -24,5 +28,64 @@
 
 `pip install yt-dlp`
 
-## 스크린샷
-업로드 예정
+아래 명령어로 clone 합니다.
+
+`git clone https://github.com/jason8098/yt-karaoke-new`
+
+필요 node 패키지를 설치 합니다.
+
+`npm install`
+
+실행합니다. 
+
+`node app.js`
+
+곡 검색/예약 등은 브라우저에 localhost:3000, 플레이어는(firefox) localhost:3000/player 로 가시면 됩니다.
+
+
+# English version
+# Youtube Karaoke Improved
+
+## Introduction
+This is an improved version of [Youtube Karaoke](https://github.com/jason8098/yt_karaoke)
+This time, I have used node.js and express.js as a base language.
+
+## Improved/Added Features
+- For data transfer, websocket (socket.io) is used. I changed it since the original regular POST method with PHP was unstable and server-client syncing was not efficient.
+- There was a problem with the copyright issue when a youtube video is embeded, preventing it from being played. So I have implemented YT-DLP which will get the direct stream URL of the video.
+- Also, users can set their preferrences for the languages and regions. 
+- This version have a capability to get search queries from multiple channels through the region settings (Auto, Internatoinal, Korea)
+- Google's youtube api has limited quota, so it easily reaches its limit when multiple users send queries. I overcame this issue with the yt-search library. Also you don't need to get an API key, which is really nice.  
+
+## Things lacking/needs to be improved
+- Chrome doesn't support video autoplay, so you still need to use Firefox. I could use video-js to solve it (let's try it later cuz it's too complex)
+- yt-search lib sometimes doesn't return correct results depending on the regions. I will try different lib or maybe optimise the search algorithm. Also ir stops search when a results are found at any channels. This should go through every channel regardless of the found results so that it gets more relavant ones.
+- There is a stupid problem discovered recently due to chnage in youtube policy, where you need to be logged in aat least once in youtube. This generates a cookie so that yt knows that you are not a robot. If not, getting stream url won't work. To overcome this, you need to extract the cookies from the actual browser and import to yt-dlp using --cookies or --cookies-from-browser parameters. But the facct that this differs thoughout the other devices, and it kinda doesn't work in Windows, also it works on certain browsers makes this alternative method unstable. It needs other replacable libraries.
+
+## Screenshots
+Will be uploaded soon
+
+
+## Installation 
+### Steps
+First, you need git, node.js and python.
+
+Install yt-dlp using this.
+
+`pip install yt-dlp`
+
+Clone the repo with this.
+
+`git clone https://github.com/jason8098/yt-karaoke-new`
+
+Install node package requirements.
+
+`npm install`
+
+Run the app.
+
+`node app.js`
+
+For clients, go to: localhost:3000, For player(firefox) localhost:3000/player
+
+
