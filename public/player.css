@@ -37,7 +37,29 @@ video {
     white-space: nowrap;
     will-change: transform;
 }
-
+.cont {
+    position: absolute;
+    display: none;
+}
+.cont h1{
+    color: white;
+    font-weight: bold;
+    font-size: 40px;
+    text-align: center;
+    padding: 10px;
+    margin: 0px;
+    background-color: rgba(0, 0, 0, 0.73);
+}
+.cont h2 {
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    white-space: nowrap;
+    padding: 10px;
+    margin: 0px;
+    background-color: rgba(0, 0, 0, 0.73); 
+    
+}
 @keyframes scroll-left {
     from {
         transform: translateX(100%);
@@ -50,5 +72,5 @@ video {
     position: absolute;
     bottom: 10px;
     right: 10px;
-    width: 150px;
+    width: 100px;
 }

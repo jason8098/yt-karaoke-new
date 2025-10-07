@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YouTube Search App</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.1/socket.io.js"></script>
+    <script src="socket.io.min.js"></script>
     <link rel="stylesheet" href="style.css">
     <script src="index.js"></script>
 </head>
@@ -13,7 +13,14 @@
         <source src="/intro.mp4" type="video/mp4">
       </video>
     <div class="container">
-        <h1 id="txt-title">JK 노래방</h1>
+        <div class="header">
+            <h1 id="txt-title">웹 노래방</h1>
+            <button style="margin-bottom: 10px;" class="collapse-btn txt-rlist" onclick="togglePlaylistModal()">예약 목록</button>
+            <form style="width: 100%;" id="searchForm" onsubmit="handleSubmit(event)">
+                <input type="text" id="query" placeholder="검색" required />
+                <button id="txt-sch" type="submit">검색</button>
+            </form>
+        </div>
 
         <!-- Settings Icon -->
         <img style="width:30px" src="settings-icon.png" class="settings-icon" onclick="toggleSettingsModal()" alt="Settings" />
@@ -52,8 +59,8 @@
                     <h3 id="txt-region">지역</h3>
                     <select id="region" style="font-size: 1.3em;">
                         <option id="txt-auto" value="auto">자동</option>
-                        <option id="txt-ko" value="korea">한국</option>
-                        <option id="txt-int" value="international">해외</option>
+                        <option id="txt-ko" value="korea-1">한국-1</option>
+                        <option id="txt-ko2" value="korea-2">한국-2</option>
                     </select>
                     <br>
                     <h3 id="txt-video-tgl">배경 영상</h3>
@@ -68,7 +75,7 @@
         </div>
 
         <!-- Toggle Playlist Button -->
-        <button style="margin-bottom: 10px;" class="collapse-btn txt-rlist" onclick="togglePlaylistModal()">예약 목록</button>
+        
 
         <!-- Modal for Playlist -->
         <div id="playlistModal" class="modal">
@@ -83,7 +90,7 @@
                                 <tr>
                                     <th>#</th>
                                     <th style="width:100%" id="txt-cancle-list-title">제목</th>
-                                    <!--th id="txt-cancle-list-action">동작</th-->
+                                    <th id="txt-cancle-list-action">동작</th>
                                 </tr>
                             </thead>
                             <tbody id="playlist-body"></tbody>
@@ -92,14 +99,8 @@
                 </div>
             </div>
         </div>
-
-        <!-- Search form with search bar and button on the same line -->
-        <form style="width: 100%;" id="searchForm" onsubmit="handleSubmit(event)">
-            <input type="text" id="query" placeholder="검색" required />
-            <button id="txt-sch" type="submit">검색</button>
-        </form>
-
         <div id="results"></div>
+        <div class="dummy"></div>
     </div>
 </body>
 </html>

@@ -1,5 +1,7 @@
 let socket = io();
-        const language = localStorage.getItem('language') || 'de';
+
+
+        const language = localStorage.getItem('language') || 'ko';
         const vid_tgl = localStorage.getItem('vid_tgl') || 'false';
         const region = localStorage.getItem('region') || 'auto';
         window.onload = function() {
@@ -23,11 +25,11 @@ let socket = io();
                 document.getElementsByClassName('txt-rlist')[0].innerHTML="Reserve List";
                 document.getElementsByClassName('txt-rlist')[1].innerHTML="Reserve List";
                 document.getElementById('txt-cancle-list-title').innerHTML="Title";
-                // /document.getElementById('txt-cancle-list-action').innerHTML="Action";
+                document.getElementById('txt-cancle-list-action').innerHTML="Action";
                 document.getElementById('txt-sch').innerHTML="Search";
                 document.getElementById('query').placeholder="Search";
-                document.getElementById('txt-ko').innerHTML="Korea";
-                document.getElementById('txt-int').innerHTML="International";
+                document.getElementById('txt-ko').innerHTML="Korea-1";
+                document.getElementById('txt-ko2').innerHTML="Korea-2";
                 document.getElementById('txt-auto').innerHTML="Automatic";
                 document.getElementById('txt-save').innerHTML="Save";
                 document.getElementById('txt-video-tgl').innerHTML="On/Off Background Video";
@@ -40,11 +42,11 @@ let socket = io();
                 document.getElementsByClassName('txt-rlist')[0].innerHTML = "Reservierungsliste";
                 document.getElementsByClassName('txt-rlist')[1].innerHTML = "Reservierungsliste";
                 document.getElementById('txt-cancle-list-title').innerHTML = "Titel";
-                // /document.getElementById('txt-cancle-list-action').innerHTML="Action";
+                document.getElementById('txt-cancle-list-action').innerHTML="Action";
                 document.getElementById('txt-sch').innerHTML = "Suche";
                 document.getElementById('query').placeholder = "Suche";
-                document.getElementById('txt-ko').innerHTML = "Korea";
-                document.getElementById('txt-int').innerHTML = "International";
+                document.getElementById('txt-ko').innerHTML="Korea-1";
+                document.getElementById('txt-ko2').innerHTML="Korea-2";
                 document.getElementById('txt-auto').innerHTML = "Automatisch";
                 document.getElementById('txt-save').innerHTML = "Speichern";
                 document.getElementById('txt-video-tgl').innerHTML = "Hintergrundvideo Ein/Aus";
@@ -56,11 +58,11 @@ let socket = io();
                 document.getElementsByClassName('txt-rlist')[0].innerHTML = "Lista di prenotazione";
                 document.getElementsByClassName('txt-rlist')[1].innerHTML = "Lista di prenotazione";
                 document.getElementById('txt-cancle-list-title').innerHTML = "Titolo";
-                // /document.getElementById('txt-cancle-list-action').innerHTML="Action";
+                document.getElementById('txt-cancle-list-action').innerHTML="Action";
                 document.getElementById('txt-sch').innerHTML = "Ricerca";
                 document.getElementById('query').placeholder = "Ricerca";
-                document.getElementById('txt-ko').innerHTML = "Corea";
-                document.getElementById('txt-int').innerHTML = "Internazionale";
+                document.getElementById('txt-ko').innerHTML="Corea-1";
+                document.getElementById('txt-ko2').innerHTML="Corea-2";
                 document.getElementById('txt-auto').innerHTML = "Automatico";
                 document.getElementById('txt-save').innerHTML = "Salva";
                 document.getElementById('txt-video-tgl').innerHTML = "Attiva/Disattiva video di sfondo";
@@ -72,11 +74,11 @@ let socket = io();
                 document.getElementsByClassName('txt-rlist')[0].innerHTML = "Liste de réservation";
                 document.getElementsByClassName('txt-rlist')[1].innerHTML = "Liste de réservation";
                 document.getElementById('txt-cancle-list-title').innerHTML = "Titre";
-                // /document.getElementById('txt-cancle-list-action').innerHTML="Action";
+                document.getElementById('txt-cancle-list-action').innerHTML="Action";
                 document.getElementById('txt-sch').innerHTML = "Recherche";
                 document.getElementById('query').placeholder = "Recherche";
-                document.getElementById('txt-ko').innerHTML = "Corée";
-                document.getElementById('txt-int').innerHTML = "International";
+                document.getElementById('txt-ko').innerHTML = "Corée-1";
+                document.getElementById('txt-ko2').innerHTML = "Corée-2";
                 document.getElementById('txt-auto').innerHTML = "Automatique";
                 document.getElementById('txt-save').innerHTML = "Enregistrer";
                 document.getElementById('txt-video-tgl').innerHTML = "Activer/Désactiver la vidéo d'arrière-plan";
@@ -89,10 +91,11 @@ let socket = io();
                 document.getElementsByClassName('txt-rlist')[0].innerHTML = "預訂清單";
                 document.getElementsByClassName('txt-rlist')[1].innerHTML = "預訂清單";
                 document.getElementById('txt-cancle-list-title').innerHTML = "標題";
-                // /document.getElementById('txt-cancle-list-action').innerHTML="Action";
+                document.getElementById('txt-cancle-list-action').innerHTML="Action";
                 document.getElementById('txt-sch').innerHTML = "搜索";
                 document.getElementById('query').placeholder = "搜索";
-                document.getElementById('txt-ko').innerHTML = "韓國";
+                document.getElementById('txt-ko').innerHTML = "韓國-1";
+                document.getElementById('txt-ko2').innerHTML = "韓國-2";
                 document.getElementById('txt-int').innerHTML = "國際";
                 document.getElementById('txt-auto').innerHTML = "自動";
                 document.getElementById('txt-save').innerHTML = "保存";
@@ -107,11 +110,11 @@ let socket = io();
                 document.getElementsByClassName('txt-rlist')[0].innerHTML="Lista de Reserva";
                 document.getElementsByClassName('txt-rlist')[1].innerHTML="Lista de Reserva";
                 document.getElementById('txt-cancle-list-title').innerHTML="Título";
-                // /document.getElementById('txt-cancle-list-action').innerHTML="Action";
+                document.getElementById('txt-cancle-list-action').innerHTML="Action";
                 document.getElementById('txt-sch').innerHTML="Buscar";
                 document.getElementById('query').placeholder="Buscar";
-                document.getElementById('txt-ko').innerHTML="Corea";
-                document.getElementById('txt-int').innerHTML="Internacional";
+                document.getElementById('txt-ko').innerHTML="Corea-1";
+                document.getElementById('txt-ko2').innerHTML="Corea-2";
                 document.getElementById('txt-auto').innerHTML="Automático";
                 document.getElementById('txt-save').innerHTML="Guardar";
                 document.getElementById('txt-video-tgl').innerHTML="Activar/Desactivar Video de Fondo";
@@ -155,8 +158,11 @@ let socket = io();
         } else {
             namePromptMessage = "Please enter your name (Group or Individual)";
         }
-
-        title += " - " + prompt(namePromptMessage);
+        
+        if(namePromptMessage === null || namePromptMessage === ""){
+            title += " - " + prompt(namePromptMessage);
+            
+        }
         socket.emit('addVideo', { videoUrl, title, language, region });
 
         console.log('Video selected successfully');
@@ -198,7 +204,13 @@ let socket = io();
             // Listen for search results from the server
             socket.on('searchResults', (videos) => {
                 resultsContainer.innerHTML = ''; // Clear previous results
-
+                if (videos.length < 8){
+                    resultsContainer.style.height = "auto";
+                    resultsContainer.style.flexGrow = "0";
+                }else{
+                    resultsContainer.style.height = "100%";
+                    resultsContainer.style.flexGrow = "1";
+                }
                 if (videos && videos.length > 0) {
                     const table = document.createElement('table');
                     const thead = document.createElement('thead');
@@ -223,11 +235,10 @@ let socket = io();
 
                     const tbody = document.createElement('tbody');
                     videos.forEach(video => {
+                        const actionCell = document.createElement('td');
                         const row = document.createElement('tr');
                         const titleCell = document.createElement('td');
                         titleCell.innerText = video.title;
-
-                        const actionCell = document.createElement('td');
                         const link = document.createElement('button');
                         link.href = 'javascript:void(0)';
 
@@ -293,7 +304,6 @@ let socket = io();
         var playlistInt;
 
 function togglePlaylistModal() {
-    // Update the language of the "Remove" buttons if necessary
     if (language === "en") {
       //  for (var i = 0; i < document.getElementsByClassName('remove-btn').length; i++) {
      //       document.getElementsByClassName('remove-btn')[i].innerHTML = "Remove";
@@ -325,18 +335,17 @@ function updatePlaylist(playlist) {
 
     playlist.forEach((item, index) => {
         const row = document.createElement('tr');
+        const actionCell = document.createElement('td');
         const titleCell = document.createElement('td');
         titleCell.innerText = item.title;
+        const removeBtn = document.createElement('button');
+        removeBtn.innerText = language === "ko" ? '삭제' : 'Remove';
+        removeBtn.classList.add('remove-btn');
+        removeBtn.onclick = () => removeFromPlaylist(index);
 
-        //const actionCell = document.createElement('td');
-       // const removeBtn = document.createElement('button');
-        //removeBtn.innerText = language === "ko" ? '삭제' : 'Remove';
-        //removeBtn.classList.add('remove-btn');
-        //removeBtn.onclick = () => removeFromPlaylist(index);
-
-        //actionCell.appendChild(removeBtn);
+        actionCell.appendChild(removeBtn);
         row.appendChild(titleCell);
-        //row.appendChild(actionCell);
+        row.appendChild(actionCell);
         playlistTableBody.appendChild(row);
     });
 }
@@ -392,9 +401,8 @@ function removeFromPlaylist(index) {
                     row.style.color = "#007bff";
                 }
 
-                playlistTableBody.appendChild(row);
-                titleCell.innerText = item.title;
-                /*const removeBtn = document.createElement('button');
+                const actionCell = document.createElement('td');
+                const removeBtn = document.createElement('button');
                 if (language === "en") {
                     removeBtn.innerText = 'Remove';
                     removeBtn.style.width = "80px";
@@ -407,9 +415,11 @@ function removeFromPlaylist(index) {
                 removeBtn.classList.add('remove-btn');
                 removeBtn.onclick = () => removeFromPlaylist(index);
 
-                actionCell.appendChild(removeBtn);*/
+                actionCell.appendChild(removeBtn);
+                playlistTableBody.appendChild(row);
                 row.appendChild(noCell);
                 row.appendChild(titleCell);
+                row.appendChild(actionCell);
                 playlistTableBody.appendChild(row);
             });
         }
