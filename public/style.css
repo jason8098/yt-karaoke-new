@@ -31,7 +31,7 @@ html{
     flex: 0 1 auto; 
 }
 .container .dummy {
-    flex: 0 1 50px; 
+    flex: 0 1 50px;
 }
 form {
     display: flex;
