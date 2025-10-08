@@ -187,7 +187,6 @@ const os = require('os');
 
         socket.emit('playlistUpdated', playlist);
 
-        // Handle requests for the current playlist
         socket.on('getPlaylist', () => {
             socket.emit('playlistUpdated', playlist); // Send the current playlist to the client
         });
