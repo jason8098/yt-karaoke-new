@@ -5,7 +5,7 @@
     const path = require('path');
     const { exec } = require('child_process'); // For executing yt-dlp commands
     const QRCode = require('qrcode');
-const os = require('os');
+    const os = require('os');
 
     const app = express();
     const server = http.createServer(app);
