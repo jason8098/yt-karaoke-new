@@ -122,9 +122,9 @@ socket.on('playlistUpdated', (updatedPlaylist, action) => {
     currentPlaylist = updatedPlaylist;
     updateMarquee(currentPlaylist);
 
-    console.log('Is playing:', action);
+    console.log('action:', action);
     if (action == "cancel") {
-        if(currentPlaylist.length > 1){
+        if(currentPlaylist.length > 0){
             var nSong = document.getElementById('nextSong');
             var lTime = document.getElementById('timeLeft');
             var cont = document.getElementById('ct');
@@ -143,6 +143,8 @@ socket.on('playlistUpdated', (updatedPlaylist, action) => {
                     lTime.innerText = "10초 후 시작...";
                 }
             }, 1000);
+        }else{
+            playNextOrIntro();
         }
     }
     else if (currentPlaylist.length == 1 && action=="add"){
